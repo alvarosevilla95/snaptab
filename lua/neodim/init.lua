@@ -240,3 +240,11 @@ local function snapshots_picker()
       })
       :find()
 end
+
+vim.keymap.set("n", "<leader>tt", snapshots_picker, { silent = true })
+vim.keymap.set("n", "<leader>T", new_layout, { silent = true })
+vim.keymap.set("n", "<leader>tn", next_layout, { silent = true })
+vim.keymap.set("n", "<leader>tN", shift_layout_front, { silent = true })
+vim.keymap.set("n", "<leader>tp", prev_layout, { silent = true })
+vim.keymap.set("n", "<leader>tP", shift_layout_back, { silent = true })
+vim.keymap.set("n", "<leader>tr", snapshots_picker, { silent = true })
