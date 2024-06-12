@@ -87,3 +87,95 @@ local function restore_layout(snapshot)
   end
   vim.api.nvim_set_current_win(winid)
 end
+
+local current = 1
+local snapshots = { take_snapshot("Default") }
+
+local function open_layout(name)
+  for i, snapshot in ipairs(snapshots) do
+    if snapshot.name == name and current ~= i then
+      snapshots[current] = take_snapshot(snapshots[current].name)
+      restore_layout(snapshot)
+      current = i
+      return
+    end
+  end
+end
+
+local function next_layout()
+  if #snapshots == 0 then
+    return
+  end
+  snapshots[current] = take_snapshot(snapshots[current].name)
+  current = current + 1 % #snapshots
+  if current > #snapshots then
+    current = 1
+  end
+  restore_layout(snapshots[current])
+end
+
+local function prev_layout()
+  if #snapshots == 0 then
+    return
+  end
+  snapshots[current] = take_snapshot(snapshots[current].name)
+  current = current - 1
+  if current < 1 then
+    current = #snapshots
+  end
+  restore_layout(snapshots[current])
+end
+
+local function shift_layout_back()
+  local next = current - 1
+  if next < 1 then
+    next = #snapshots
+  end
+  snapshots[current], snapshots[next] = snapshots[next], snapshots[current]
+  current = next
+end
+
+local function shift_layout_front()
+  local next = current + 1
+  if next > #snapshots then
+    next = 1
+  end
+  snapshots[current], snapshots[next] = snapshots[next], snapshots[current]
+  current = next
+end
+
+local function new_layout()
+  snapshots[current] = take_snapshot(snapshots[current].name)
+  current = #snapshots + 1
+  vim.cmd("silent! tabonly")
+  vim.cmd("silent! only")
+  snapshots[current] = take_snapshot("Snapshot " .. current)
+end
+
+local function delete_layout(name)
+  for i, snapshot in ipairs(snapshots) do
+    if snapshot.name == name then
+      if current == i then
+        print("Cannot delete current layout")
+        return
+      end
+      table.remove(snapshots, i)
+      if current > i then
+        current = current - 1
+      end
+      return
+    end
+  end
+end
+
+local function rename_layout(name)
+  for _, snapshot in ipairs(snapshots) do
+    if snapshot.name == name then
+      local new_name = vim.fn.input("New name: ", name)
+      if new_name ~= "" then
+        snapshot.name = new_name
+      end
+      return
+    end
+  end
+end
