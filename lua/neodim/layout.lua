@@ -59,6 +59,17 @@ local function open_or_go_to_file(filepath)
   end
 end
 
+local function restore_sizes(layout)
+  if layout.type == "leaf" then
+    vim.api.nvim_win_set_width(layout.winid, layout.width)
+    vim.api.nvim_win_set_height(layout.winid, layout.height)
+  elseif layout.type == "col" or layout.type == "row" then
+    for _, child in ipairs(layout.children) do
+      restore_sizes(child)
+    end
+  end
+end
+
 --- Restores the layout of a single tab
 --- Returns the id of the focused window if it was found
 --- @param layout table
@@ -67,6 +78,7 @@ local function restore_tab(layout)
   if layout.type == "leaf" then
     open_or_go_to_file(layout.bufname)
     vim.api.nvim_win_set_cursor(0, layout.cursor)
+    layout.winid = vim.api.nvim_get_current_win()
     if layout.current then
       return vim.api.nvim_get_current_win()
     end
@@ -104,6 +116,7 @@ M.restore_layout = function(snapshot)
       vim.cmd("tab split")
     end
     local _winid = restore_tab(tab)
+    restore_sizes(tab)
     if _winid then
       winid = _winid
     end
