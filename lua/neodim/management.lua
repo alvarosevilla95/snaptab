@@ -104,4 +104,46 @@ M.rename_layout = function(name)
   end
 end
 
+local function get_layout_buffers(layout)
+  local buffers = {}
+  if layout.type == "leaf" then
+    buffers[layout.bufnr] = true
+  else
+    for _, child in ipairs(layout.children) do
+      buffers = vim.tbl_extend("keep", buffers, get_layout_buffers(child))
+    end
+  end
+  return buffers
+end
+
+local function get_snapshot_buffers(snapshot)
+  local buffers = {}
+  for _, layout in ipairs(snapshot) do
+    buffers = vim.tbl_extend("keep", buffers, get_layout_buffers(layout))
+  end
+  return buffers
+end
+
+local function get_all_snapshot_buffers()
+  local buffers = {}
+  for _, snapshot in ipairs(snapshots) do
+    local bufs = get_snapshot_buffers(snapshot)
+    buffers = vim.tbl_extend("keep", buffers, bufs)
+  end
+  return buffers
+end
+
+M.delete_buffers_not_in_layout = function()
+  snapshots[current] = take_snapshot(snapshots[current].name)
+  local in_layout = get_all_snapshot_buffers()
+  local bufs = vim.fn.range(1, vim.fn.bufnr("$"))
+  for _, buf in ipairs(bufs) do
+    if vim.fn.bufexists(buf) == 1 and not in_layout[buf] then
+      if buf ~= vim.g.term_bf then
+        vim.cmd("silent! bwipeout " .. buf, false)
+      end
+    end
+  end
+end
+
 return M
