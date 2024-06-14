@@ -20,7 +20,6 @@ local function snapshots_picker()
       initial_mode = "normal",
       prompt_title = "Select a Layout",
       default_selection_index = get_current(),
-
       finder = finders.new_table({
         results = get_snapshots(),
         entry_maker = function(entry)
@@ -38,8 +37,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            print(selection.name)
-            open_layout(selection.name)
+            open_layout(selection.index)
           end
         end
 
@@ -47,7 +45,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            delete_layout(selection.name)
+            delete_layout(selection.index)
           end
           snapshots_picker()
         end
@@ -56,7 +54,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            rename_layout(selection.name)
+            rename_layout(selection.index)
           end
           snapshots_picker()
         end

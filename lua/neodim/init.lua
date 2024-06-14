@@ -1,4 +1,4 @@
-require("neodim.seralize")
+require("neodim.session")
 return {
   new_layout = require("neodim.management").new_layout,
   next_layout = require("neodim.management").next_layout,

@@ -1,8 +1,5 @@
 local M = {}
 
---- Recurively iterates through the node returning its expanded structure
---- @param node any
---- @return any
 local function save_layout(node)
   if node[1] == "leaf" then
     return {
@@ -54,6 +51,9 @@ local function open_or_go_to_file(filepath)
   end
 end
 
+--- Restores the sizes of the windows in the layout
+--- Needs to be done after all windows are open
+--- @param layout table
 local function restore_sizes(layout)
   if layout.type == "leaf" then
     vim.api.nvim_win_set_width(layout.winid, layout.width)
@@ -77,7 +77,7 @@ local function restore_tab(layout)
     if layout.current then
       return vim.api.nvim_get_current_win()
     end
-  elseif layout.type == "col" or layout.type == "row" then
+  else
     local window = vim.api.nvim_get_current_win()
     local winid = nil
     local opened_wins = {}
@@ -110,14 +110,11 @@ M.restore_layout = function(snapshot)
     if i > 1 then
       vim.cmd("tab split")
     end
-    local _winid = restore_tab(tab)
-    if _winid then
-      winid = _winid
-    end
+    winid = restore_tab(tab) or winid
     -- Restore sizes after all windows are open
     restore_sizes(tab)
   end
-  if winid ~= nil then
+  if winid then
     vim.api.nvim_set_current_win(winid)
   end
 end

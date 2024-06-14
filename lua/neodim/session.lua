@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
   pattern = "*",
   callback = function()
     local session = vim.v.this_session
-    if vim.v.this_session then
+    if vim.v.this_session ~= "" then
       local layout_file = session:gsub(".vim$", ".vim.layout")
       vim.fn.writefile({ serialize_state() }, layout_file)
     end
@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("SessionLoadPost", {
   pattern = "*",
   callback = function()
     local session = vim.v.this_session
-    if vim.v.this_session then
+    if vim.v.this_session ~= "" then
       local layout_file = session:gsub(".vim$", ".vim.layout")
       if vim.fn.filereadable(layout_file) then
         deserialize_state(vim.fn.readfile(layout_file)[1])

@@ -2,7 +2,6 @@ local restore_layout = require("neodim.layout").restore_layout
 local take_snapshot = require("neodim.layout").take_snapshot
 
 local current = 1
-
 local snapshots = { take_snapshot("Default") }
 
 local M = {}
@@ -23,118 +22,98 @@ M.set_snapshots = function(value)
   snapshots = value
 end
 
-M.open_layout = function(name)
-  for i, snapshot in ipairs(snapshots) do
-    if snapshot.name == name and current ~= i then
-      snapshots[current] = take_snapshot(snapshots[current].name)
-      restore_layout(snapshot)
-      current = i
-      return
-    end
+local function next_index()
+  return (current % #snapshots) + 1
+end
+
+local function prev_index()
+  return (current - 2) % #snapshots + 1
+end
+
+M.open_layout = function(index)
+  if index == current then
+    return
   end
+  local snapshot = snapshots[index]
+  snapshots[current] = take_snapshot(snapshots[current].name)
+  restore_layout(snapshot)
+  current = index
+  print(snapshots[current].name)
 end
 
 M.next_layout = function()
-  snapshots[current] = take_snapshot(snapshots[current].name)
-  current = current + 1
-  if current > #snapshots then
-    current = 1
-  end
-  restore_layout(snapshots[current])
+  M.open_layout(next_index())
 end
 
 M.prev_layout = function()
-  snapshots[current] = take_snapshot(snapshots[current].name)
-  current = current - 1
-  if current < 1 then
-    current = #snapshots
-  end
-  restore_layout(snapshots[current])
+  M.open_layout(prev_index())
 end
 
-M.shift_layout_back = function()
-  local next = current - 1
-  if next < 1 then
-    next = #snapshots
-  end
-  snapshots[current], snapshots[next] = snapshots[next], snapshots[current]
-  current = next
+M.shift_layout = function(index)
+  snapshots[current], snapshots[index] = snapshots[index], snapshots[current]
+  current = index
 end
 
 M.shift_layout_front = function()
-  local next = current + 1
-  if next > #snapshots then
-    next = 1
-  end
-  snapshots[current], snapshots[next] = snapshots[next], snapshots[current]
-  current = next
+  M.shift_layout(next_index())
+end
+
+M.shift_layout_back = function()
+  M.shift_layout(prev_index())
 end
 
 M.new_layout = function()
   snapshots[current] = take_snapshot(snapshots[current].name)
   current = #snapshots + 1
-  vim.cmd("silent! tabonly")
-  vim.cmd("silent! only")
+  vim.cmd("silent! tabonly | only")
   snapshots[current] = take_snapshot("Layout " .. current)
+  print(snapshots[current].name)
 end
 
-M.delete_layout = function(name)
-  for i, snapshot in ipairs(snapshots) do
-    if snapshot.name == name then
-      if current == i then
-        print("Cannot delete current layout")
-        return
-      end
-      table.remove(snapshots, i)
-      if current > i then
-        current = current - 1
-      end
-      return
-    end
+M.delete_layout = function(index)
+  if current == index then
+    vim.fn.confirm("Cannot delete current layout")
+    return
+  end
+  table.remove(snapshots, index)
+  if current > index then
+    current = current - 1
   end
 end
 
-M.rename_layout = function(name)
-  for _, snapshot in ipairs(snapshots) do
-    if snapshot.name == name then
-      local new_name = vim.fn.input("New name: ", name)
-      if new_name ~= "" then
-        snapshot.name = new_name
-      end
-      return
-    end
+M.rename_layout = function(index)
+  local snapshot = snapshots[index]
+  local new_name = vim.fn.input("New name: ", snapshot.name)
+  if new_name ~= "" then
+    snapshot.name = new_name
   end
 end
 
-local function get_layout_buffers(layout)
-  local buffers = {}
+local function get_layout_buffers(layout, buffers)
   if layout.type == "leaf" then
     buffers[layout.bufnr] = true
   else
     for _, child in ipairs(layout.children) do
-      buffers = vim.tbl_extend("keep", buffers, get_layout_buffers(child))
+      get_layout_buffers(child, buffers)
     end
   end
-  return buffers
 end
 
-local function get_snapshot_buffers(snapshot)
-  local buffers = {}
+local function get_snapshot_buffers(snapshot, buffers)
   for _, layout in ipairs(snapshot.layouts) do
-    buffers = vim.tbl_extend("keep", buffers, get_layout_buffers(layout))
+    get_layout_buffers(layout, buffers)
   end
-  return buffers
 end
 
 local function get_all_snapshot_buffers()
   local buffers = {}
   for _, snapshot in ipairs(snapshots) do
-    local bufs = get_snapshot_buffers(snapshot)
-    buffers = vim.tbl_extend("keep", buffers, bufs)
+    get_snapshot_buffers(snapshot, buffers)
   end
   return buffers
 end
 
+--- Wipes all buffers that are not opened in any layout
 M.delete_buffers_not_in_layout = function()
   snapshots[current] = take_snapshot(snapshots[current].name)
   local in_layout = get_all_snapshot_buffers()
