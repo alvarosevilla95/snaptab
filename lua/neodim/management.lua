@@ -75,7 +75,7 @@ M.new_layout = function()
   current = #snapshots + 1
   vim.cmd("silent! tabonly")
   vim.cmd("silent! only")
-  snapshots[current] = take_snapshot("Snapshot " .. current)
+  snapshots[current] = take_snapshot("Layout " .. current)
 end
 
 M.delete_layout = function(name)

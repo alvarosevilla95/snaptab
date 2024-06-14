@@ -18,7 +18,7 @@ local function snapshots_picker()
         height = 0.2,
       },
       initial_mode = "normal",
-      prompt_title = "Select a Snapshot",
+      prompt_title = "Select a Layout",
       default_selection_index = get_current(),
 
       finder = finders.new_table({
