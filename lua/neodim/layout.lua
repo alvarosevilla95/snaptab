@@ -16,11 +16,7 @@ local function save_layout(node)
       height = vim.api.nvim_win_get_height(node[2]),
     }
   else
-    local children = {}
-    for i, child in ipairs(node[2]) do
-      children[i] = save_layout(child)
-    end
-    return { type = node[1], children = children }
+    return { type = node[1], children = vim.tbl_map(save_layout, node[2]) }
   end
 end
 
@@ -31,8 +27,7 @@ end
 M.take_snapshot = function(name)
   local snapshot = { name = name }
   for tabnr = 1, vim.fn.tabpagenr("$") do
-    local layout = save_layout(vim.fn.winlayout(tabnr))
-    snapshot[tabnr] = layout
+    snapshot[tabnr] = save_layout(vim.fn.winlayout(tabnr))
   end
   return snapshot
 end
@@ -116,10 +111,11 @@ M.restore_layout = function(snapshot)
       vim.cmd("tab split")
     end
     local _winid = restore_tab(tab)
-    restore_sizes(tab)
     if _winid then
       winid = _winid
     end
+    -- Restore sizes after all windows are open
+    restore_sizes(tab)
   end
   if winid ~= nil then
     vim.api.nvim_set_current_win(winid)

@@ -27,11 +27,8 @@ M.open_layout = function(name)
 end
 
 M.next_layout = function()
-  if #snapshots == 0 then
-    return
-  end
   snapshots[current] = take_snapshot(snapshots[current].name)
-  current = current + 1 % #snapshots
+  current = current + 1
   if current > #snapshots then
     current = 1
   end
@@ -39,9 +36,6 @@ M.next_layout = function()
 end
 
 M.prev_layout = function()
-  if #snapshots == 0 then
-    return
-  end
   snapshots[current] = take_snapshot(snapshots[current].name)
   current = current - 1
   if current < 1 then
