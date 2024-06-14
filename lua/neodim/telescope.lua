@@ -4,6 +4,7 @@ local sorters = require("telescope.sorters")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
+local get_current = require("neodim.management").get_current
 local get_snapshots = require("neodim.management").get_snapshots
 local open_layout = require("neodim.management").open_layout
 local delete_layout = require("neodim.management").delete_layout
@@ -18,6 +19,8 @@ local function snapshots_picker()
       },
       initial_mode = "normal",
       prompt_title = "Select a Snapshot",
+      default_selection_index = get_current(),
+
       finder = finders.new_table({
         results = get_snapshots(),
         entry_maker = function(entry)
@@ -30,8 +33,8 @@ local function snapshots_picker()
         end,
       }),
       sorter = sorters.get_generic_fuzzy_sorter(),
-      attach_mappings = function(_, map)
-        local function enter_handler(prompt_bufnr)
+      attach_mappings = function(prompt_bufnr, map)
+        local function enter_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
@@ -40,7 +43,7 @@ local function snapshots_picker()
           end
         end
 
-        local function delete_handler(prompt_bufnr)
+        local function delete_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
@@ -49,7 +52,7 @@ local function snapshots_picker()
           snapshots_picker()
         end
 
-        local function rename_handler(prompt_bufnr)
+        local function rename_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
@@ -62,6 +65,7 @@ local function snapshots_picker()
         map("n", "<CR>", enter_handler)
         map("n", "dd", delete_handler)
         map("n", "r", rename_handler)
+
         return true
       end,
     })
