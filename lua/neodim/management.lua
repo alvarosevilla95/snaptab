@@ -11,8 +11,16 @@ M.get_current = function()
   return current
 end
 
+M.set_current = function(value)
+  current = value
+end
+
 M.get_snapshots = function()
   return snapshots
+end
+
+M.set_snapshots = function(value)
+  snapshots = value
 end
 
 M.open_layout = function(name)
