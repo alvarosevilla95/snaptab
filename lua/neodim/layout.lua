@@ -25,11 +25,11 @@ end
 --- @param name string
 --- @return table
 M.take_snapshot = function(name)
-  local snapshot = { name = name }
+  local layouts = {}
   for tabnr = 1, vim.fn.tabpagenr("$") do
-    snapshot[tabnr] = save_layout(vim.fn.winlayout(tabnr))
+    layouts[tabnr] = save_layout(vim.fn.winlayout(tabnr))
   end
-  return snapshot
+  return { name = name, layouts = layouts }
 end
 
 --- Returns the buffer for a given filename
@@ -106,7 +106,7 @@ M.restore_layout = function(snapshot)
   vim.cmd("silent! tabonly")
   vim.cmd("silent! only")
   local winid
-  for i, tab in ipairs(snapshot) do
+  for i, tab in ipairs(snapshot.layouts) do
     if i > 1 then
       vim.cmd("tab split")
     end

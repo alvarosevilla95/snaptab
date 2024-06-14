@@ -120,7 +120,7 @@ end
 
 local function get_snapshot_buffers(snapshot)
   local buffers = {}
-  for _, layout in ipairs(snapshot) do
+  for _, layout in ipairs(snapshot.layouts) do
     buffers = vim.tbl_extend("keep", buffers, get_layout_buffers(layout))
   end
   return buffers
