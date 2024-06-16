@@ -89,6 +89,10 @@ M.rename_snapshot = function(index)
   end
 end
 
+M.rename_current_snapshot = function()
+  M.rename_snapshot(current)
+end
+
 local function get_layout_buffers(layout, buffers)
   if layout.type == "leaf" then
     buffers[layout.bufnr] = true

@@ -27,7 +27,7 @@ Here's my lazy config to install it:
       vim.keymap.set("n", "<leader>tJ", neodim.shift_snapshot_front)
       vim.keymap.set("n", "<leader>tk", neodim.prev_snapshot)
       vim.keymap.set("n", "<leader>tK", neodim.shift_snapshot_back)
-      vim.keymap.set("n", "<leader>tr", neodim.rename_snapshot)
+      vim.keymap.set("n", "<leader>tr", neodim.rename_current_snapshot)
       vim.keymap.set("n", "<leader>dh", neodim.delete_buffers_not_in_any_snapshot)
 
       local group_id = vim.api.nvim_create_augroup("NeodimSession", { clear = true })
@@ -76,7 +76,7 @@ As shown above, the API exposed by the plugin consists of:
 * `require("neodim").prev_snapshot`: Same but goes back in the list
 * `require("neodim").shift_snapshot_front`: Shifts the current snapshot down the list
 * `require("neodim").shift_snapshot_back`: Shifts the current snapshot up the list
-* `require("neodim").rename_snapshot`: Renames the current snapshot (asks for input)
+* `require("neodim").rename_current_snapshot`: Renames the current snapshot (asks for input)
 * `require("neodim").snapshots_picker`: Opens the snapshot list in telescope (if installed). In normal mode (default), `dd` deletes the selected snapshot (if it's not the current one). `r` renames the snapshot and `<CR>` opens the snapshot. In insert mode only <CR>` is mapped
 * `require("neodim").delete_buffers_not_in_any_snapshot`: A bit niche but I use it. It wipes all buffers not currently opened in any snapshot (not just the current one)
 
