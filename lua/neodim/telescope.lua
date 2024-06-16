@@ -6,11 +6,15 @@ local action_state = require("telescope.actions.state")
 
 local get_current = require("neodim.management").get_current
 local get_snapshots = require("neodim.management").get_snapshots
-local open_layout = require("neodim.management").open_layout
-local delete_layout = require("neodim.management").delete_layout
-local rename_layout = require("neodim.management").rename_layout
+local open_snapshot = require("neodim.management").open_snapshot
+local delete_snapshot = require("neodim.management").delete_snapshot
+local rename_snapshot = require("neodim.management").rename_snapshot
+local has_plugin = require("neodim.utils").has_plugin
 
 local function snapshots_picker()
+  if not has_plugin("telescope") then
+    return
+  end
   pickers
     .new(require("telescope.themes").get_dropdown({}), {
       layout_config = {
@@ -37,7 +41,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            open_layout(selection.index)
+            open_snapshot(selection.index)
           end
         end
 
@@ -45,7 +49,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            delete_layout(selection.index)
+            delete_snapshot(selection.index)
           end
           snapshots_picker()
         end
@@ -54,7 +58,7 @@ local function snapshots_picker()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           if selection then
-            rename_layout(selection.index)
+            rename_snapshot(selection.index)
           end
           snapshots_picker()
         end

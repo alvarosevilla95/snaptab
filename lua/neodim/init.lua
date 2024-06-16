@@ -1,11 +1,16 @@
-require("neodim.session")
+local management = require("neodim.management")
+local session = require("neodim.session")
+local telescope = require("neodim.telescope")
 
 return {
-  new_layout = require("neodim.management").new_layout,
-  next_layout = require("neodim.management").next_layout,
-  prev_layout = require("neodim.management").prev_layout,
-  shift_layout_front = require("neodim.management").shift_layout_front,
-  shift_layout_back = require("neodim.management").shift_layout_back,
-  snapshots_picker = require("neodim.telescope").snapshots_picker,
-  delete_buffers_not_in_layout = require("neodim.management").delete_buffers_not_in_layout,
+  new_snapshot = management.new_snapshot,
+  next_snapshot = management.next_snapshot,
+  prev_snapshot = management.prev_snapshot,
+  shift_snapshot_front = management.shift_snapshot_front,
+  shift_snapshot_back = management.shift_snapshot_back,
+  rename_snapshot = management.rename_snapshot,
+  serialize_state = session.serialize_state,
+  restore_state = session.restore_state,
+  delete_buffers_not_in_any_snapshot = management.delete_buffers_not_in_any_snapshot,
+  snapshots_picker = telescope.snapshots_picker,
 }
