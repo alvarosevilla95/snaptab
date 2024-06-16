@@ -16,7 +16,7 @@ Here's my lazy config to install it:
 <details>
   <summary>Lazy</summary>
 
-```
+```lua
   {
     "alvarosevilla95/neodim",
     config = function()
