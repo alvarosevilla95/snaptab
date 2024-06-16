@@ -52,7 +52,7 @@ local function restore_sizes(layout)
 end
 
 local function restore_leaf(layout)
-  if has_plugin("nvim_tree") and string.match(layout.bufname, "NvimTree_.*") then
+  if has_plugin("nvim-tree") and string.match(layout.bufname, "NvimTree_.*") then
     require("nvim-tree.lib").open({ path = layout.tree_cwd, current_window = true })
   else
     open_or_go_to_file(layout.bufname)
