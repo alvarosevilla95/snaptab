@@ -2,7 +2,7 @@ local M = {}
 
 local function save_layout(node)
   if node[1] == "leaf" then
-    return {
+    local layout = {
       type = "leaf",
       winid = node[2],
       current = node[2] == vim.api.nvim_get_current_win(),
@@ -12,6 +12,11 @@ local function save_layout(node)
       width = vim.api.nvim_win_get_width(node[2]),
       height = vim.api.nvim_win_get_height(node[2]),
     }
+    -- check if bufname matches NvimTree_*
+    if string.match(layout.bufname, "NvimTree_.*") then
+      layout.tree_cwd = require("nvim-tree.core").get_cwd()
+    end
+    return layout
   else
     return { type = node[1], children = vim.tbl_map(save_layout, node[2]) }
   end
@@ -71,9 +76,13 @@ end
 --- @return number | nil
 local function restore_tab(layout)
   if layout.type == "leaf" then
-    open_or_go_to_file(layout.bufname)
-    vim.api.nvim_win_set_cursor(0, layout.cursor)
+    if layout.tree_cwd then
+      require("nvim-tree.lib").open({ path = layout.tree_cwd, current_window = true })
+    else
+      open_or_go_to_file(layout.bufname)
+    end
     layout.winid = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_cursor(0, layout.cursor)
     if layout.current then
       return vim.api.nvim_get_current_win()
     end
@@ -103,8 +112,8 @@ end
 --- Will open all tabs and windows
 --- @param snapshot table
 M.restore_layout = function(snapshot)
-  vim.cmd("silent! tabonly")
-  vim.cmd("silent! only")
+  vim.cmd("silent! tabonly | only")
+  vim.cmd("silent! NvimTreeClose")
   local winid
   for i, tab in ipairs(snapshot.layouts) do
     if i > 1 then
