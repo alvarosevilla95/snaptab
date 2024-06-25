@@ -101,8 +101,10 @@ end
 --- Will open all tabs and windows
 --- @param snapshot table
 M.restore_snapshot = function(snapshot)
-  vim.cmd("silent! tabonly | only")
-  vim.cmd("silent! NvimTreeClose")
+  vim.cmd("silent! tabonly | silent! only")
+  if has_plugin("nvim-tree") then
+    vim.cmd("silent! NvimTreeClose")
+  end
   vim.cmd("cd " .. snapshot.cwd)
   local winid
   for i, layout in ipairs(snapshot.layouts) do
