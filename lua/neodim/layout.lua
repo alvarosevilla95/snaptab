@@ -34,7 +34,7 @@ M.take_snapshot = function(name)
   for tabnr = 1, vim.fn.tabpagenr("$") do
     layouts[tabnr] = capture_layout(vim.fn.winlayout(tabnr))
   end
-  return { name = name, layouts = layouts }
+  return { name = name, layouts = layouts, cwd = vim.fn.getcwd() }
 end
 
 --- Restores the sizes of the windows in the layout
@@ -103,6 +103,7 @@ end
 M.restore_snapshot = function(snapshot)
   vim.cmd("silent! tabonly | only")
   vim.cmd("silent! NvimTreeClose")
+  vim.cmd("cd " .. snapshot.cwd)
   local winid
   for i, layout in ipairs(snapshot.layouts) do
     if i > 1 then
