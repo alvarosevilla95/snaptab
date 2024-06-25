@@ -58,7 +58,7 @@ local function restore_leaf(layout)
     open_or_go_to_file(layout.bufname)
   end
   layout.winid = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_cursor(0, layout.cursor)
+  pcall(vim.api.nvim_win_set_cursor, 0, layout.cursor)
   if layout.current then
     return vim.api.nvim_get_current_win()
   end
