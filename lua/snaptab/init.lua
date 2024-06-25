@@ -2,6 +2,12 @@ local management = require("snaptab.management")
 local session = require("snaptab.session")
 local telescope = require("snaptab.telescope")
 
+-- Used to save / restore the state of the plugin after calling "Lazy reload", mostly for dev purposes
+if SNAPTAB_GLOBAL_CACHE then
+  management.set_snapshots(SNAPTAB_GLOBAL_CACHE.snapshots)
+  management.set_current(SNAPTAB_GLOBAL_CACHE.current)
+end
+
 return {
   new_snapshot = management.new_snapshot,
   next_snapshot = management.next_snapshot,
@@ -13,4 +19,10 @@ return {
   restore_state = session.restore_state,
   delete_buffers_not_in_any_snapshot = management.delete_buffers_not_in_any_snapshot,
   snapshots_picker = telescope.snapshots_picker,
+  deactivate = function()
+    SNAPTAB_GLOBAL_CACHE = {
+      snapshots = management.get_snapshots(),
+      current = management.get_current(),
+    }
+  end,
 }
