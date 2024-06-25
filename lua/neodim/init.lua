@@ -1,6 +1,6 @@
-local management = require("neodim.management")
-local session = require("neodim.session")
-local telescope = require("neodim.telescope")
+local management = require("snaptab.management")
+local session = require("snaptab.session")
+local telescope = require("snaptab.telescope")
 
 return {
   new_snapshot = management.new_snapshot,

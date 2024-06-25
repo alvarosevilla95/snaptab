@@ -1,5 +1,5 @@
-local open_or_go_to_file = require("neodim.utils").open_or_go_to_file
-local has_plugin = require("neodim.utils").has_plugin
+local open_or_go_to_file = require("snaptab.utils").open_or_go_to_file
+local has_plugin = require("snaptab.utils").has_plugin
 
 local M = {}
 

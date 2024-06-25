@@ -1,1 +1,1 @@
-require("neodim")
+require("snaptab")

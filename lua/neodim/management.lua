@@ -1,5 +1,5 @@
-local restore_snaphot = require("neodim.layout").restore_snapshot
-local take_snapshot = require("neodim.layout").take_snapshot
+local restore_snaphot = require("snaptab.layout").restore_snapshot
+local take_snapshot = require("snaptab.layout").take_snapshot
 
 local current = 1
 local snapshots = { take_snapshot("Default") }

@@ -4,12 +4,12 @@ local sorters = require("telescope.sorters")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
-local get_current = require("neodim.management").get_current
-local get_snapshots = require("neodim.management").get_snapshots
-local open_snapshot = require("neodim.management").open_snapshot
-local delete_snapshot = require("neodim.management").delete_snapshot
-local rename_snapshot = require("neodim.management").rename_snapshot
-local has_plugin = require("neodim.utils").has_plugin
+local get_current = require("snaptab.management").get_current
+local get_snapshots = require("snaptab.management").get_snapshots
+local open_snapshot = require("snaptab.management").open_snapshot
+local delete_snapshot = require("snaptab.management").delete_snapshot
+local rename_snapshot = require("snaptab.management").rename_snapshot
+local has_plugin = require("snaptab.utils").has_plugin
 
 local function snapshots_picker()
   if not has_plugin("telescope") then

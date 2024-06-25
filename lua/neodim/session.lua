@@ -1,7 +1,7 @@
-local get_current = require("neodim.management").get_current
-local set_current = require("neodim.management").set_current
-local get_snapshots = require("neodim.management").get_snapshots
-local set_snapshots = require("neodim.management").set_snapshots
+local get_current = require("snaptab.management").get_current
+local set_current = require("snaptab.management").set_current
+local get_snapshots = require("snaptab.management").get_snapshots
+local set_snapshots = require("snaptab.management").set_snapshots
 
 local M = {}
 
