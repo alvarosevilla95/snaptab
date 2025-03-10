@@ -54,6 +54,12 @@ end
 local function restore_leaf(layout)
   if has_plugin("nvim-tree") and string.match(layout.bufname, "NvimTree_.*") then
     require("nvim-tree.lib").open({ path = layout.tree_cwd, current_window = true })
+  elseif layout.bufname == "" then
+    if vim.api.nvim_buf_is_valid(layout.bufnr) and vim.api.nvim_buf_get_name(layout.bufnr) == "" then
+      vim.api.nvim_set_current_buf(layout.bufnr)
+    else
+      vim.cmd("enew")
+    end
   else
     open_or_go_to_file(layout.bufname)
   end
