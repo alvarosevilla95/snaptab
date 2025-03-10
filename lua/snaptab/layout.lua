@@ -105,6 +105,9 @@ M.restore_snapshot = function(snapshot)
   if has_plugin("nvim-tree") then
     vim.cmd("silent! NvimTreeClose")
   end
+  if has_plugin("neo-tree") then
+    vim.cmd("silent! Neotree close")
+  end
   vim.cmd("cd " .. snapshot.cwd)
   local winid
   for i, layout in ipairs(snapshot.layouts) do
