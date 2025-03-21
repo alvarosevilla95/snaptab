@@ -93,6 +93,10 @@ M.rename_current_snapshot = function()
   M.rename_snapshot(current)
 end
 
+M.current_snapshot = function()
+  return snapshots[current].name
+end
+
 local function get_layout_buffers(layout, buffers)
   if layout.type == "leaf" then
     buffers[layout.bufnr] = true
@@ -124,7 +128,7 @@ M.delete_buffers_not_in_any_snapshot = function()
   local bufs = vim.fn.range(1, vim.fn.bufnr("$"))
   for _, buf in ipairs(bufs) do
     if vim.fn.bufexists(buf) == 1 and not in_layout[buf] then
-      if buf ~= vim.g.term_bf then
+      if buf ~= toggle_term_bf then
         vim.cmd("silent! bwipeout " .. buf, false)
       end
     end

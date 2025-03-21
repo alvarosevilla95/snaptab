@@ -14,6 +14,7 @@ return {
   prev_snapshot = management.prev_snapshot,
   shift_snapshot_front = management.shift_snapshot_front,
   shift_snapshot_back = management.shift_snapshot_back,
+  current_snapshot = management.current_snapshot,
   rename_current_snapshot = management.rename_current_snapshot,
   serialize_state = session.serialize_state,
   restore_state = session.restore_state,
