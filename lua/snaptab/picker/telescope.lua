@@ -12,9 +12,7 @@ local rename_snapshot = require("snaptab.management").rename_snapshot
 local has_plugin = require("snaptab.utils").has_plugin
 
 local function snapshots_picker()
-  if not has_plugin("telescope") then
-    return
-  end
+  if not has_plugin("telescope") then return end
   pickers
     .new(require("telescope.themes").get_dropdown({}), {
       layout_config = {
@@ -40,26 +38,20 @@ local function snapshots_picker()
         local function enter_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
-          if selection then
-            open_snapshot(selection.index)
-          end
+          if selection then open_snapshot(selection.index) end
         end
 
         local function delete_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
-          if selection then
-            delete_snapshot(selection.index)
-          end
+          if selection then delete_snapshot(selection.index) end
           snapshots_picker()
         end
 
         local function rename_handler()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
-          if selection then
-            rename_snapshot(selection.index)
-          end
+          if selection then rename_snapshot(selection.index) end
           snapshots_picker()
         end
 

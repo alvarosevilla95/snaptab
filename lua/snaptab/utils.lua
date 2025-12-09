@@ -3,9 +3,7 @@
 --- @return number | nil
 local function buffer_for_file(filename)
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_name(buf) == filename then
-      return buf
-    end
+    if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_name(buf) == filename then return buf end
   end
 end
 
@@ -21,9 +19,7 @@ local function open_or_go_to_file(filepath)
 end
 
 --- @param plugin string
-local function has_plugin(plugin)
-  return pcall(require, plugin)
-end
+local function has_plugin(plugin) return pcall(require, plugin) end
 
 return {
   open_or_go_to_file = open_or_go_to_file,

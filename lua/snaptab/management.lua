@@ -6,34 +6,20 @@ local snapshots = { take_snapshot("Default") }
 
 local M = {}
 
-M.get_current = function()
-  return current
-end
+M.get_current = function() return current end
 
-M.set_current = function(value)
-  current = value
-end
+M.set_current = function(value) current = value end
 
-M.get_snapshots = function()
-  return snapshots
-end
+M.get_snapshots = function() return snapshots end
 
-M.set_snapshots = function(value)
-  snapshots = value
-end
+M.set_snapshots = function(value) snapshots = value end
 
-local function next_index()
-  return (current % #snapshots) + 1
-end
+local function next_index() return (current % #snapshots) + 1 end
 
-local function prev_index()
-  return (current - 2) % #snapshots + 1
-end
+local function prev_index() return (current - 2) % #snapshots + 1 end
 
 M.open_snapshot = function(index)
-  if index == current then
-    return
-  end
+  if index == current then return end
   local snapshot = snapshots[index]
   snapshots[current] = take_snapshot(snapshots[current].name)
   restore_snaphot(snapshot)
@@ -41,26 +27,18 @@ M.open_snapshot = function(index)
   print(snapshots[current].name)
 end
 
-M.next_snapshot = function()
-  M.open_snapshot(next_index())
-end
+M.next_snapshot = function() M.open_snapshot(next_index()) end
 
-M.prev_snapshot = function()
-  M.open_snapshot(prev_index())
-end
+M.prev_snapshot = function() M.open_snapshot(prev_index()) end
 
 M.shift_shapshot = function(index)
   snapshots[current], snapshots[index] = snapshots[index], snapshots[current]
   current = index
 end
 
-M.shift_snapshot_front = function()
-  M.shift_shapshot(next_index())
-end
+M.shift_snapshot_front = function() M.shift_shapshot(next_index()) end
 
-M.shift_snapshot_back = function()
-  M.shift_shapshot(prev_index())
-end
+M.shift_snapshot_back = function() M.shift_shapshot(prev_index()) end
 
 M.new_snapshot = function()
   snapshots[current] = take_snapshot(snapshots[current].name)
@@ -76,26 +54,18 @@ M.delete_snapshot = function(index)
     return
   end
   table.remove(snapshots, index)
-  if current > index then
-    current = current - 1
-  end
+  if current > index then current = current - 1 end
 end
 
 M.rename_snapshot = function(index)
   local snapshot = snapshots[index]
   local new_name = vim.fn.input("New name: ", snapshot.name)
-  if new_name ~= "" then
-    snapshot.name = new_name
-  end
+  if new_name ~= "" then snapshot.name = new_name end
 end
 
-M.rename_current_snapshot = function()
-  M.rename_snapshot(current)
-end
+M.rename_current_snapshot = function() M.rename_snapshot(current) end
 
-M.current_snapshot = function()
-  return snapshots[current].name
-end
+M.current_snapshot = function() return snapshots[current].name end
 
 local function get_layout_buffers(layout, buffers)
   if layout.type == "leaf" then
@@ -128,9 +98,7 @@ M.delete_buffers_not_in_any_snapshot = function()
   local bufs = vim.fn.range(1, vim.fn.bufnr("$"))
   for _, buf in ipairs(bufs) do
     if vim.fn.bufexists(buf) == 1 and not in_layout[buf] then
-      if buf ~= toggle_term_bf then
-        vim.cmd("silent! bwipeout " .. buf, false)
-      end
+      if buf ~= toggle_term_bf then vim.cmd("silent! bwipeout " .. buf, false) end
     end
   end
 end
