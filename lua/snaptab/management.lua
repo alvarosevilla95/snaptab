@@ -24,7 +24,6 @@ M.open_snapshot = function(index)
   snapshots[current] = take_snapshot(snapshots[current].name)
   restore_snapshot(snapshot)
   current = index
-  print(snapshots[current].name)
 end
 
 M.next_snapshot = function() M.open_snapshot(next_index()) end
@@ -45,7 +44,6 @@ M.new_snapshot = function()
   current = #snapshots + 1
   vim.cmd("silent! tabonly | only")
   snapshots[current] = take_snapshot("Snapshot " .. current)
-  print(snapshots[current].name)
 end
 
 M.delete_snapshot = function(index)
