@@ -113,7 +113,7 @@ M.restore_snapshot = function(snapshot)
   vim.cmd("silent! stopinsert | silent! tabonly | silent! only")
   if has_plugin("nvim-tree") then vim.cmd("silent! NvimTreeClose") end
   if has_plugin("neo-tree") then vim.cmd("silent! Neotree close") end
-  vim.cmd("cd " .. snapshot.cwd)
+  vim.cmd("cd " .. vim.fn.fnameescape(snapshot.cwd))
   local winid
   for i, layout in ipairs(snapshot.layouts) do
     if i > 1 then vim.cmd("tab split") end

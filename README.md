@@ -53,7 +53,7 @@ Here's my lazy config to install it:
           local session = vim.v.this_session
           if vim.v.this_session ~= "" then
             local layout_file = session:gsub(".vim$", ".vim.layout")
-            if vim.fn.filereadable(layout_file) then
+            if vim.fn.filereadable(layout_file) == 1 then
               local json_str = vim.fn.readfile(layout_file)[1]
               snaptab.restore_state(json_str)
             end
