@@ -41,4 +41,3 @@ end
 return {
   snapshots_picker = snapshots_picker,
 }
-

@@ -14,7 +14,7 @@ local function open_or_go_to_file(filepath)
   if buf then
     vim.api.nvim_set_current_buf(buf)
   else
-    vim.cmd("silent! edit " .. filepath)
+    vim.cmd("silent! edit " .. vim.fn.fnameescape(filepath))
   end
 end
 
