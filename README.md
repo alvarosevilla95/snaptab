@@ -8,7 +8,7 @@ I like to work with tabs a lot. Usually I find myself overloaded with tabs, some
 
 Many people will solve this by using multiple nvim instances running on different windows / tmux sessions. But I like to work with a single instance of nvim and everything to live inside it. So to deal with this I've created this plugin.
 
-snaptab allows you save and restore your current tabs layout in its entirety. It captures all buffers, windows, sizes, cursor positions... for all your tabs, for you to restore later. It also lets you manage these snapshots by cycling through them (or opening them from telescope if you have it).
+snaptab allows you save and restore your current tabs layout in its entirety. It captures all buffers, windows, sizes, cursor positions... for all your tabs, for you to restore later. It also lets you manage these snapshots by cycling through them or opening them from a picker (supports [snacks.nvim](https://github.com/folke/snacks.nvim), [telescope](https://github.com/nvim-telescope/telescope.nvim), or the built-in `vim.ui.select`).
 
 ## Installation
 
@@ -77,7 +77,9 @@ As shown above, the API exposed by the plugin consists of:
 * `require("snaptab").shift_snapshot_front`: Shifts the current snapshot down the list
 * `require("snaptab").shift_snapshot_back`: Shifts the current snapshot up the list
 * `require("snaptab").rename_current_snapshot`: Renames the current snapshot (asks for input)
-* `require("snaptab").snapshots_picker`: Opens the snapshot list in telescope (if installed). In normal mode (default), `dd` deletes the selected snapshot (if it's not the current one). `r` renames the snapshot and `<CR>` opens the snapshot. In insert mode only <CR>` is mapped
-* `require("snaptab").delete_buffers_not_in_any_snapshot`: A bit niche but I use it. It wipes all buffers not currently opened in any snapshot (not just the current one)
-
-
+* `require("snaptab").current_snapshot`: Returns the name of the current snapshot
+* `require("snaptab").snapshots_picker`: Opens the snapshot picker. Uses snacks.nvim if available, falls back to telescope, then to `vim.ui.select`. In normal mode (default), `dd` deletes the selected snapshot (if it's not the current one), `r` renames the snapshot, and `<CR>` opens the snapshot
+* `require("snaptab").delete_buffers_not_in_any_snapshot`: Wipes all buffers not currently opened in any snapshot (not just the current one)
+* `require("snaptab").serialize_state`: Serializes the plugin state to a JSON string (useful for session persistence)
+* `require("snaptab").restore_state`: Restores the plugin state from a JSON string
+* `require("snaptab").deactivate`: Caches the plugin state for preservation across Lazy reloads

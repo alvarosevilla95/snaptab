@@ -1,4 +1,4 @@
-local restore_snaphot = require("snaptab.layout").restore_snapshot
+local restore_snapshot = require("snaptab.layout").restore_snapshot
 local take_snapshot = require("snaptab.layout").take_snapshot
 
 local current = 1
@@ -22,7 +22,7 @@ M.open_snapshot = function(index)
   if index == current then return end
   local snapshot = snapshots[index]
   snapshots[current] = take_snapshot(snapshots[current].name)
-  restore_snaphot(snapshot)
+  restore_snapshot(snapshot)
   current = index
   print(snapshots[current].name)
 end
@@ -31,14 +31,14 @@ M.next_snapshot = function() M.open_snapshot(next_index()) end
 
 M.prev_snapshot = function() M.open_snapshot(prev_index()) end
 
-M.shift_shapshot = function(index)
+M.shift_snapshot = function(index)
   snapshots[current], snapshots[index] = snapshots[index], snapshots[current]
   current = index
 end
 
-M.shift_snapshot_front = function() M.shift_shapshot(next_index()) end
+M.shift_snapshot_front = function() M.shift_snapshot(next_index()) end
 
-M.shift_snapshot_back = function() M.shift_shapshot(prev_index()) end
+M.shift_snapshot_back = function() M.shift_snapshot(prev_index()) end
 
 M.new_snapshot = function()
   snapshots[current] = take_snapshot(snapshots[current].name)
@@ -97,9 +97,7 @@ M.delete_buffers_not_in_any_snapshot = function()
   local in_layout = get_all_snapshot_buffers()
   local bufs = vim.fn.range(1, vim.fn.bufnr("$"))
   for _, buf in ipairs(bufs) do
-    if vim.fn.bufexists(buf) == 1 and not in_layout[buf] then
-      if buf ~= toggle_term_bf then vim.cmd("silent! bwipeout " .. buf, false) end
-    end
+    if vim.fn.bufexists(buf) == 1 and not in_layout[buf] then vim.cmd("silent! bwipeout " .. buf) end
   end
 end
 
