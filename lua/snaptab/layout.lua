@@ -25,7 +25,8 @@ local function capture_layout(node)
     }
     -- store cwd for nvim-tree
     if has_plugin("nvim-tree") and string.match(layout.bufname, "NvimTree_.*") then
-      layout.tree_cwd = require("nvim-tree.core").get_cwd()
+      local root = require("nvim-tree.api").tree.get_nodes()
+      layout.tree_cwd = root and root.absolute_path
     end
     return layout
   else
@@ -62,7 +63,7 @@ end
 
 local function restore_leaf(layout)
   if has_plugin("nvim-tree") and string.match(layout.bufname, "NvimTree_.*") then
-    require("nvim-tree.lib").open({ path = layout.tree_cwd, current_window = true })
+    require("nvim-tree.api").tree.open({ path = layout.tree_cwd, current_window = true })
   elseif layout.bufname == "" then
     if vim.api.nvim_buf_is_valid(layout.bufnr) and vim.api.nvim_buf_get_name(layout.bufnr) == "" then
       vim.api.nvim_set_current_buf(layout.bufnr)
